@@ -1,1 +1,62 @@
-
+[
+  {
+    "title": "Data Act",
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R2854",
+    "articles": [
+      {
+        "article": "4",
+        "paragraphs": [
+          {
+            "number": 1,
+            "text": "Manufacturers shall design products to allow data access by default."
+          },
+          {
+            "number": 2,
+            "text": "Users must be informed about data generation and access rights."
+          }
+        ]
+      },
+      {
+        "article": "5",
+        "paragraphs": [
+          {
+            "number": 1,
+            "text": "Data holders shall make data available under fair, reasonable and non-discriminatory terms."
+          },
+          {
+            "number": 2,
+            "text": "This includes sharing data with public sector bodies when necessary."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "AI Act",
+    "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52021PC0206",
+    "articles": [
+      {
+        "article": "3",
+        "paragraphs": [
+          {
+            "number": 1,
+            "text": "Artificial intelligence system means software developed with machine learning approaches."
+          },
+          {
+            "number": 2,
+            "text": "High-risk AI systems include those used in biometric identification and law enforcement."
+          }
+        ]
+      },
+      {
+        "article": "5",
+        "paragraphs": [
+          {
+            "number": 1,
+            "text": "Prohibited AI practices include social scoring by governments and subliminal manipulation."
+          }
+        ]
+      }
+    ]
+  }
+]
