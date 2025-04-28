@@ -44,6 +44,13 @@ if query:
     query_embedding = model.encode([query])
     D, I = index.search(query_embedding, k=5)
 
+    # Add relevance check after FAISS search
+    similarity_threshold = 0.75  # You can adjust this if needed
+
+    if D[0][0] > (1 - similarity_threshold):
+        st.error("❗ Sorry, I couldn't find any relevant EU law matching your question.")
+        st.stop()
+
     relevant_contexts = [metadata[i]["text"] for i in I[0]]
     references = [metadata[i] for i in I[0]]
 
