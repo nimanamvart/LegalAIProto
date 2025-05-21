@@ -1,24 +1,23 @@
-
 import streamlit as st
 import json
 import faiss
 import os
-from sentence_transformers import SentenceTransformer, models
 import numpy as np
-import openai
 from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+import openai
 
+# Load environment variables (OpenAI key)
 load_dotenv()
 
-# Load model from local path
-word_embedding_model = models.Transformer("./", max_seq_length=256)
-pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension())
-model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
+# Load model (cloud-compatible)
+model = SentenceTransformer("paraphrase-MiniLM-L3-v2")  # Small, fast, and works on Streamlit Cloud
 
 # Load structured law content
 with open("real_eu_laws.json", "r", encoding="utf-8") as f:
     real_laws = json.load(f)
 
+# Prepare searchable index
 def flatten_laws(laws):
     passages = []
     meta = []
@@ -35,21 +34,27 @@ embeddings = model.encode(texts, convert_to_numpy=True)
 index = faiss.IndexFlatL2(embeddings.shape[1])
 index.add(embeddings)
 
+# UI
 st.set_page_config(page_title="EU Law Q&A", layout="centered")
 st.title("📘 EU Law Assistant")
 
 query = st.text_input("Ask a question about EU digital laws:")
 
+# Keyword filter (warn if not relevant)
+allowed_keywords = [
+    "data", "gdpr", "privacy", "platform", "processing", "controller", "ai", "artificial intelligence",
+    "gatekeeper", "dma", "dsa", "services", "market", "regulation", "consent", "user", "personal data",
+    "automated decision", "intermediary", "provider", "access", "sharing", "dataset", "open data", 
+    "eprivacy", "security", "cyber", "incident", "compliance", "obligation", "law", "eu", "municipality"
+]
+
 if query:
+    lower_query = query.lower()
+    if not any(keyword in lower_query for keyword in allowed_keywords):
+        st.warning("⚠️ This question may not be clearly related to EU digital laws. Please ensure your terms are specific.")
+
     query_embedding = model.encode([query])
     D, I = index.search(query_embedding, k=5)
-
-    # Add relevance check after FAISS search
-    similarity_threshold = 0.75  # You can adjust this if needed
-
-    if D[0][0] > (1 - similarity_threshold):
-        st.error("❗ Sorry, I couldn't find any relevant EU law matching your question.")
-        st.stop()
 
     relevant_contexts = [metadata[i]["text"] for i in I[0]]
     references = [metadata[i] for i in I[0]]
@@ -76,6 +81,7 @@ if query:
 
     st.subheader("Answer")
     st.write(answer)
+
     st.markdown("### References")
     for ref in references:
         st.write(f"**{ref['ref']}**")
