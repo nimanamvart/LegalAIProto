@@ -81,8 +81,10 @@ if query:
             ]
         )
         answer = response["choices"][0]["message"]["content"]
+        st.success("✅ GPT response received.")
 
-    except Exception:
+    except Exception as e:
+        st.error(f"⚠️ GPT response failed: {e}")
         top = references[0]
         answer = f"Top match: {top['ref']}\n\n{top['text']}"
 
