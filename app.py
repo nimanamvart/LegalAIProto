@@ -10,6 +10,9 @@ import openai
 # Load environment variables (OpenAI API key)
 load_dotenv()
 
+# Initialize OpenAI client (new SDK >=1.0 format)
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 # Load sentence transformer model
 model = SentenceTransformer("paraphrase-MiniLM-L3-v2")
 
@@ -69,18 +72,14 @@ if query:
     user_prompt = f"Question: {query}\n\nRelevant legal texts:\n" + "\n\n".join(relevant_contexts)
 
     try:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        if not openai.api_key:
-            raise ValueError("Missing API key")
-
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
         )
-        answer = response["choices"][0]["message"]["content"]
+        answer = response.choices[0].message.content
         st.success("✅ GPT response received.")
 
     except Exception as e:
