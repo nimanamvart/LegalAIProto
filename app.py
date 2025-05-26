@@ -84,9 +84,11 @@ if query:
         st.success("✅ GPT response received.")
 
     except Exception as e:
-        st.error(f"⚠️ GPT response failed: {e}")
-        top = references[0]
-        answer = f"Top match: {top['ref']}\n\n{top['text']}"
+    st.error(f"⚠️ GPT response failed: {e}")
+    answer = "⚠️ AI response failed. Showing top 2 closest legal matches:\n\n"
+    for i, ref in enumerate(references[:2], start=1):
+        answer += f"{i}. **{ref['ref']}**\n\"{ref['text']}\"\n\n"
+
 
     st.subheader("Answer")
     st.write(answer)
