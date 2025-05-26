@@ -1,6 +1,6 @@
 streamlit
+openai>=1.0.0
+python-dotenv
 sentence-transformers
 faiss-cpu
-openai
 numpy
-python-dotenv
